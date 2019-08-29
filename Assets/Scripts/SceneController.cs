@@ -7,6 +7,9 @@ using System;
 public class SceneController : MonoBehaviour
 {
     [SerializeField] GameObject myObject;
+    public Camera firstPersonCamera;
+    public DetectedPlane detectedPlane;
+
     void Start()
     {
         
@@ -39,8 +42,20 @@ public class SceneController : MonoBehaviour
         TrackableHitFlags hitFilter = TrackableHitFlags.PlaneWithinBounds | TrackableHitFlags.PlaneWithinPolygon;
         if (Frame.Raycast(touch.position.x, touch.position.y, hitFilter, out hit))
         {
-            Instantiate(myObject, touch.position, Quaternion.identity);
+            detectedPlane = hit.Trackable as DetectedPlane;
+            PlaceHouse(detectedPlane, hit);
         }
 
+    }
+
+    private void PlaceHouse(DetectedPlane plane, TrackableHit hit)
+    {
+        if (plane == null) return;
+
+        var hitPos = hit.Pose;
+
+        Anchor anchor = plane.CreateAnchor(hitPos);
+
+        var objectInstance = Instantiate(myObject, hitPos.position, Quaternion.identity, anchor.transform);
     }
 }
