@@ -10,12 +10,6 @@ public class SceneController : MonoBehaviour
     public Camera firstPersonCamera;
     public DetectedPlane detectedPlane;
 
-    void Start()
-    {
-        
-    }
-
-
     void Update()
     {
         if (Session.Status != SessionStatus.Tracking)
@@ -52,10 +46,21 @@ public class SceneController : MonoBehaviour
     {
         if (plane == null) return;
 
+        var houses = GameObject.FindGameObjectsWithTag("LevelPart");
+        Anchor[] oldAnchors = FindObjectsOfType<Anchor>();
+
+        foreach (var oldAnchor in oldAnchors)
+        {
+            Destroy(oldAnchor);
+        }
+
+        foreach (var house in houses)
+        {
+            DestroyImmediate(house);
+        }
+
         var hitPos = hit.Pose;
-
         Anchor anchor = plane.CreateAnchor(hitPos);
-
         var objectInstance = Instantiate(myObject, hitPos.position, Quaternion.identity, anchor.transform);
     }
 }
