@@ -6,7 +6,7 @@ using System;
 
 public class SceneController : MonoBehaviour
 {
-
+    [SerializeField] GameObject myObject;
     void Start()
     {
         
@@ -28,6 +28,9 @@ public class SceneController : MonoBehaviour
     private void ProcessTouch()
     {
         Touch touch;
+        
+        if (Input.touchCount < 1) return;
+
         touch = Input.GetTouch(0);
 
         if (Input.touchCount != 1 || (touch.phase != TouchPhase.Began)) return;
@@ -36,7 +39,7 @@ public class SceneController : MonoBehaviour
         TrackableHitFlags hitFilter = TrackableHitFlags.PlaneWithinBounds | TrackableHitFlags.PlaneWithinPolygon;
         if (Frame.Raycast(touch.position.x, touch.position.y, hitFilter, out hit))
         {
-
+            Instantiate(myObject, touch.position, Quaternion.identity);
         }
 
     }
